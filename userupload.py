@@ -1,25 +1,6 @@
-'''import streamlit as st
-
-
-st.title(":green[T]emp :blue[S]hare")
-st.subheader(":blue[Upload File]")
-st.file_uploader("Upload file")'''
-
-
-
-
-
-
-
-
-
-
-
 import streamlit as st
 import os
 import shutil
-from io import BytesIO
-import matplotlib.pyplot as plt
 
 # Directory to store uploaded files
 UPLOAD_DIR = 'uploads'
@@ -49,29 +30,6 @@ def bytes_to_human_readable(byte_size):
 def get_disk_usage():
     total, used, free = shutil.disk_usage("/")
     return total, used, free
-
-# Show storage usage chart
-def show_storage_chart():
-    total_capacity, used_capacity, free_capacity = get_disk_usage()
-
-    # Convert to GB for easier reading
-    total_capacity = total_capacity / (1024 ** 3)
-    used_capacity = used_capacity / (1024 ** 3)
-    free_capacity = free_capacity / (1024 ** 3)
-
-    labels = ['Used', 'Free']
-    sizes = [used_capacity, free_capacity]
-    colors = ['#ff9999', '#66b3ff']
-
-    fig, ax = plt.subplots()
-    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    st.pyplot(fig)
-
-    st.write(f"Used storage: {used_capacity:.2f} GB")
-    st.write(f"Free storage: {free_capacity:.2f} GB")
-    st.write(f"Total storage: {total_capacity:.2f} GB")
 
 # Streamlit UI
 st.title(":green[T]emp :blue[S]hare")
@@ -111,5 +69,27 @@ if uploaded_files:
             os.remove(file_path)
             st.success(f"File {file} deleted successfully!")
 
-# Show the storage chart with dynamic usage
-show_storage_chart()
+# Get disk usage info
+total_capacity, used_capacity, free_capacity = get_disk_usage()
+
+# Convert to GB for easier reading
+total_capacity = total_capacity / (1024 ** 3)
+used_capacity = used_capacity / (1024 ** 3)
+free_capacity = free_capacity / (1024 ** 3)
+
+# Display storage usage as a text
+st.subheader("Disk Usage Information")
+
+st.write(f"Total storage: {total_capacity:.2f} GB")
+st.write(f"Used storage: {used_capacity:.2f} GB")
+st.write(f"Free storage: {free_capacity:.2f} GB")
+
+# Show the storage chart using a bar chart
+storage_data = {
+    "Used Storage": used_capacity,
+    "Free Storage": free_capacity
+}
+
+# Display a simple bar chart with the data
+st.bar_chart(storage_data)
+
