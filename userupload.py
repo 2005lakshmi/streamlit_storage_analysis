@@ -48,15 +48,15 @@ if uploaded_file is not None:
 
 # Display uploaded files when "Display Files" button is clicked
 if st.button("Display Uploaded Files"):
-    # List uploaded files and sort them by name or modification time
-    uploaded_files = sorted(os.listdir(UPLOAD_DIR))  # Sorting by filename
+    # List uploaded files and sort them by name
+    uploaded_files = sorted(os.listdir(UPLOAD_DIR))
 
     if uploaded_files:
         st.subheader("Uploaded Files:")
         for file in uploaded_files:
             file_path = os.path.join(UPLOAD_DIR, file)
 
-            # File download button
+            # Display each file with a download button
             with open(file_path, "rb") as f:
                 file_data = f.read()
             st.download_button(
@@ -66,12 +66,19 @@ if st.button("Display Uploaded Files"):
                 mime="application/octet-stream"
             )
 
-            # Delete button
-            if st.button(f"Delete {file}"):
-                os.remove(file_path)
-                st.success(f"File {file} deleted successfully!")
     else:
         st.write("No files uploaded yet.")
+
+# Separate Delete button for deleting files
+delete_file = st.selectbox("Select file to delete", options=[""] + sorted(os.listdir(UPLOAD_DIR)))
+
+if delete_file:
+    if st.button(f"Delete {delete_file}"):
+        # Delete the selected file
+        file_path = os.path.join(UPLOAD_DIR, delete_file)
+        os.remove(file_path)
+        st.success(f"File {delete_file} deleted successfully!")
+        st.rerun()  # Refresh the list of files after deletion
 
 # Get disk usage info
 total_capacity, used_capacity, free_capacity = get_disk_usage()
