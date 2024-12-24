@@ -46,28 +46,32 @@ if uploaded_file is not None:
         f.write(uploaded_file.getbuffer())
     st.success(f"File {uploaded_file.name} uploaded successfully!")
 
-# Show files already uploaded
-st.subheader("Uploaded Files")
-uploaded_files = os.listdir(UPLOAD_DIR)
+# Display uploaded files when "Display Files" button is clicked
+if st.button("Display Uploaded Files"):
+    # List uploaded files and sort them by name or modification time
+    uploaded_files = sorted(os.listdir(UPLOAD_DIR))  # Sorting by filename
 
-if uploaded_files:
-    for file in uploaded_files:
-        file_path = os.path.join(UPLOAD_DIR, file)
+    if uploaded_files:
+        st.subheader("Uploaded Files:")
+        for file in uploaded_files:
+            file_path = os.path.join(UPLOAD_DIR, file)
 
-        # File download button
-        with open(file_path, "rb") as f:
-            file_data = f.read()
-        st.download_button(
-            label=f"Download {file}",
-            data=file_data,
-            file_name=file,
-            mime="application/octet-stream"
-        )
+            # File download button
+            with open(file_path, "rb") as f:
+                file_data = f.read()
+            st.download_button(
+                label=f"Download {file}",
+                data=file_data,
+                file_name=file,
+                mime="application/octet-stream"
+            )
 
-        # Delete button
-        if st.button(f"Delete {file}"):
-            os.remove(file_path)
-            st.success(f"File {file} deleted successfully!")
+            # Delete button
+            if st.button(f"Delete {file}"):
+                os.remove(file_path)
+                st.success(f"File {file} deleted successfully!")
+    else:
+        st.write("No files uploaded yet.")
 
 # Get disk usage info
 total_capacity, used_capacity, free_capacity = get_disk_usage()
@@ -92,4 +96,3 @@ storage_data = {
 
 # Display a simple bar chart with the data
 st.bar_chart(storage_data)
-
