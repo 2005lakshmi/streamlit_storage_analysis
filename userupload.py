@@ -78,7 +78,10 @@ if delete_file:
         file_path = os.path.join(UPLOAD_DIR, delete_file)
         os.remove(file_path)
         st.success(f"File {delete_file} deleted successfully!")
-        st.rerun()  # Refresh the list of files after deletion
+        #st.rerun()  # Refresh the list of files after deletion
+
+        import time
+        time.sleep(2)
 
 # Get disk usage info
 total_capacity, used_capacity, free_capacity = get_disk_usage()
