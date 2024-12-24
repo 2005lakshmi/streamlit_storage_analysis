@@ -8,7 +8,7 @@ st.file_uploader("Upload file")'''
 
 
 
-!pip install matplotlib
+
 
 
 
